@@ -136,12 +136,28 @@ namespace AmazingArray
 
 			return Array.IndexOf<T>(internalArray, item) != -1;
         }
-		public int IndexOf(T item)
+		public int FindIndex(T item)
 		{
 			if (internalArray == null) throw new NullReferenceException();
 			if (item == null) throw new ArgumentNullException();
 
 			return Array.IndexOf<T>(internalArray, item);
+		}
+		public T FindFirst(Func<T, bool> predicate)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+
+			return internalArray.FirstOrDefault(predicate);
+		}
+		public T[] FindAll(Func<T, bool> predicate)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+
+			var result = from item in internalArray
+						 where predicate(item)
+						 select item;
+
+			return result.ToArray();
 		}
 		public virtual void InsertAtIndex(T item, int targetIndex)
 		{
@@ -186,7 +202,7 @@ namespace AmazingArray
 			if (targetElement == null) throw new ArgumentNullException();
 			if (internalArray == null) throw new NullReferenceException();
 
-			int elementIndex = IndexOf(targetElement);
+			int elementIndex = FindIndex(targetElement);
 			if (elementIndex == -1) return;
 
 			T[] tempArray = new T[Count - 1];
@@ -276,6 +292,11 @@ namespace AmazingArray
 				internalArray[first] = internalArray[second];
 				internalArray[second] = temp;
 			}
+		}
+		public virtual void Clear()
+		{
+			internalArray = null;
+			internalArray = Array.Empty<T>();
 		}
 		public IEnumerator<T> GetEnumerator()
 		{
