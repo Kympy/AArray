@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -7,28 +8,30 @@ using System.Threading.Tasks;
 
 namespace AmazingArray
 {
-	public class AArray<T>
+	public class AArray<T> : IEnumerable<T>
 	{
 		private T[]? internalArray;
-		private int arraySize;
-		public int InternalSize
-		{
-			get { return arraySize; }
-		}
-		public int InternalMaxIndex
+		public int Count
 		{
 			get 
 			{
-				if (arraySize == 0) return 0;
-				return arraySize - 1; 
+				if (internalArray == null) throw new NullReferenceException();
+				return internalArray.Length; 
 			}
 		}
-		private int arrayIndexPointer = 0;
+		public int MaxIndex
+		{
+			get 
+			{
+				if (internalArray == null) throw new NullReferenceException();
+				if (internalArray.Length  - 1 < 0) return 0;
+				return internalArray.Length - 1; 
+			}
+		}
 		public AArray()
 		{
-			// Default size is 10.
-			arraySize = 10;
-			internalArray = new T[arraySize];
+			// Default size is 0.
+			internalArray = Array.Empty<T>();
 		}
 		/// <summary>
 		/// Make new AArray that copied value from original array.
@@ -43,7 +46,7 @@ namespace AmazingArray
 		{
 			get
 			{
-				if (internalArray == null || index > InternalMaxIndex)
+				if (internalArray == null || index > MaxIndex)
 				{
 					throw new IndexOutOfRangeException();
 				}
@@ -51,7 +54,7 @@ namespace AmazingArray
 			}
 			set
 			{
-				if (internalArray == null || index > InternalMaxIndex)
+				if (internalArray == null || index > MaxIndex)
 				{
 					throw new IndexOutOfRangeException();
 				}
@@ -64,8 +67,7 @@ namespace AmazingArray
 			{
 				throw new ArgumentNullException();
 			}
-			arraySize = originArray.Length;
-			internalArray = new T[arraySize];
+			internalArray = new T[originArray.Length];
 			int index = 0;
 			foreach (var element in originArray)
 			{
@@ -88,48 +90,25 @@ namespace AmazingArray
 				to[i] = from[i];
 			}
 		}
-		protected int elementCount = 0;
-		public int Count
-		{
-			get { return elementCount; }
-		}
 		public virtual void Add(T item)
 		{
 			if (internalArray == null)
 			{
 				throw new NullReferenceException();
 			}
-			if (IsNeedToResize == true)
-			{
-				Resize();
-			}
-			internalArray[arrayIndexPointer++] = item;
-			elementCount++;
+			IncreaseSize();
+			internalArray[MaxIndex] = item;
 		}
-		protected bool IsNeedToResize
-		{
-			get
-			{
-				if (internalArray == null)
-				{
-					throw new NullReferenceException();
-				}
-				if (arrayIndexPointer > InternalMaxIndex)
-				{
-					return true;
-				}
-				return false;
-			}
-		}
-		protected virtual void Resize()
+		protected virtual void IncreaseSize(int amount = 1)
 		{
 			if (internalArray == null)
 			{
 				throw new NullReferenceException();
 			}
-			T[] tempArray = new T[arraySize + arraySize];
+			//if (internalArray.Length == 1) return;
+			// Increase size 1.
+			T[] tempArray = new T[Count + amount];
 			CopyFullArray(internalArray, tempArray);
-			arraySize = tempArray.Length;
 			internalArray = tempArray;
 		}
 		/// <summary>
@@ -146,12 +125,8 @@ namespace AmazingArray
 			{
 				return;
 			}
-            if (IsNeedToResize == true)
-            {
-				Resize();
-            }
-			internalArray[arrayIndexPointer++] = item;
-			elementCount++;
+			IncreaseSize();
+			internalArray[MaxIndex] = item;
         }
 		public bool Contains(T item)
 		{
@@ -167,11 +142,41 @@ namespace AmazingArray
         }
 		public virtual void InsertAtIndex(T item, int targetIndex)
 		{
+			if (internalArray == null) throw new NullReferenceException();
+			if (item == null) throw new NullReferenceException();
+			if (targetIndex > MaxIndex || targetIndex < 0) throw new IndexOutOfRangeException();
 
+			IncreaseSize();
+			for (int i = MaxIndex - 1; i >= targetIndex; i--)
+			{
+				internalArray[i + 1] = internalArray[i]; 
+			}
+			internalArray[targetIndex] = item;
+		}
+		public virtual void AddRange(T[] itemArray, int startIndex = -1)
+		{
+			if (itemArray == null || internalArray == null) throw new NullReferenceException();
+			// Add range last.
+			if (startIndex == -1)
+			{
+				foreach(var item in itemArray)
+				{
+					Add(item);
+				}
+				return;
+			}
+			for(int i = 0; i < itemArray.Length; i++)
+			{
+				InsertAtIndex(itemArray[i], startIndex + i);
+			}
+		}
+		public virtual void AddRange(List<T> itemList, int startIndex = -1)
+		{
+			AddRange(itemList.ToArray<T>(), startIndex);
 		}
 		public virtual void AddFirst(T item)
 		{
-
+			InsertAtIndex(item, 0);
 		}
 		public virtual void RemoveElement(T targetElement)
 		{
@@ -188,6 +193,18 @@ namespace AmazingArray
 		public virtual void RemoveEnd()
 		{
 
+		}
+
+		public IEnumerator<T> GetEnumerator()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			return internalArray.OfType<T>().GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			return internalArray.GetEnumerator();
 		}
 	}
 }
