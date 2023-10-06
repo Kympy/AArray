@@ -95,6 +95,46 @@ namespace AArray
 			RunAndCheckCollapsedTime(currentAction);
 			PrintArray(testIntArray);
 
+			AddTitle("Shuffle Array");
+			currentAction = () =>
+			{
+				testIntArray.Shuffle();
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testIntArray);
+
+			AddTitle("Sort ASC");
+			currentAction = () =>
+			{
+				testIntArray.SortASC((x) => x);
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testIntArray);
+
+			AddTitle("Shuffle Array");
+			currentAction = () =>
+			{
+				testIntArray.Shuffle();
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testIntArray);
+
+			AddTitle("Sort DESC");
+			currentAction = () =>
+			{
+				testIntArray.SortDESC((x) => x);
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testIntArray);
+
+			AddTitle("Reverse");
+			currentAction = () =>
+			{
+				testIntArray.Reverse();
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testIntArray);
+
 			AddTitle("Finished");
 		}
 		private static void AddTitle(string title)

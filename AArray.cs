@@ -228,7 +228,55 @@ namespace AmazingArray
 		{
 			RemoveAtIndex(MaxIndex);
 		}
+		public enum SortType
+		{
+			ASC,	
+			DESC,	// 
+		}
+		/// <summary>
+		/// Sort ASC AArray by custom predicate Func > 0, 1, 2 ...
+		/// </summary>
+		/// <param name="keyselector">lamda ex : (x) => x.someValue > 1</param>
+		/// <exception cref="NullReferenceException"></exception>
+		public virtual void SortASC<PredicateReturnType>(Func<T, PredicateReturnType> predicate)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			internalArray = internalArray.OrderBy(predicate).ToArray();
+		}
+		/// <summary>
+		/// Sort DESC AArray by custom predicate Func > 9, 8, 7 ...
+		/// </summary>
+		/// <typeparam name="KeyType"></typeparam>
+		/// <param name="predicate"></param>
+		/// <exception cref="NullReferenceException"></exception>
+		public virtual void SortDESC<PredicateReturnType>(Func<T, PredicateReturnType> predicate)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			internalArray = internalArray.OrderByDescending(predicate).ToArray();
+		}
+		public virtual void Reverse()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			internalArray = internalArray.Reverse().ToArray();
+		}
+		protected const int DEFAULT_SHUFFLE_COUNT = 30;
+		public virtual void Shuffle(int setShuffleCount = -1)
+		{
+			if (internalArray == null) throw new NullReferenceException();
 
+			Random random = new Random();
+
+			int maxShuffleCount = setShuffleCount == -1 ? DEFAULT_SHUFFLE_COUNT : setShuffleCount;
+			for(int i = 0; i < maxShuffleCount; i++)
+			{
+				int first = random.Next(0, internalArray.Length);
+				int second = random.Next(0, internalArray.Length);
+
+				T temp = internalArray[first];
+				internalArray[first] = internalArray[second];
+				internalArray[second] = temp;
+			}
+		}
 		public IEnumerator<T> GetEnumerator()
 		{
 			if (internalArray == null) throw new NullReferenceException();
