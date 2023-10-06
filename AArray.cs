@@ -63,11 +63,12 @@ namespace AmazingArray
 		}
 		public virtual void CopyFullArray(T[] originArray)
 		{
-			if (originArray == null)
+			if (originArray == null || internalArray == null) throw new NullReferenceException();
+
+			if (originArray.Length != internalArray.Length)
 			{
-				throw new ArgumentNullException();
+				internalArray = new T[originArray.Length];
 			}
-			internalArray = new T[originArray.Length];
 			int index = 0;
 			foreach (var element in originArray)
 			{
@@ -96,10 +97,10 @@ namespace AmazingArray
 			{
 				throw new NullReferenceException();
 			}
-			IncreaseSize();
+			IncreaseSize(1);
 			internalArray[MaxIndex] = item;
 		}
-		protected virtual void IncreaseSize(int amount = 1)
+		protected virtual void IncreaseSize(int amount)
 		{
 			if (internalArray == null)
 			{
@@ -125,28 +126,30 @@ namespace AmazingArray
 			{
 				return;
 			}
-			IncreaseSize();
+			IncreaseSize(1);
 			internalArray[MaxIndex] = item;
         }
 		public bool Contains(T item)
 		{
-			if (internalArray == null)
-			{
-				throw new NullReferenceException();
-			}
-            if (item == null)
-            {
-				throw new ArgumentNullException();
-            }
+			if (internalArray == null) throw new NullReferenceException();
+            if (item == null) throw new ArgumentNullException();
+
 			return Array.IndexOf<T>(internalArray, item) != -1;
         }
+		public int IndexOf(T item)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			if (item == null) throw new ArgumentNullException();
+
+			return Array.IndexOf<T>(internalArray, item);
+		}
 		public virtual void InsertAtIndex(T item, int targetIndex)
 		{
 			if (internalArray == null) throw new NullReferenceException();
 			if (item == null) throw new NullReferenceException();
 			if (targetIndex > MaxIndex || targetIndex < 0) throw new IndexOutOfRangeException();
 
-			IncreaseSize();
+			IncreaseSize(1);
 			for (int i = MaxIndex - 1; i >= targetIndex; i--)
 			{
 				internalArray[i + 1] = internalArray[i]; 
@@ -180,19 +183,50 @@ namespace AmazingArray
 		}
 		public virtual void RemoveElement(T targetElement)
 		{
+			if (targetElement == null) throw new ArgumentNullException();
+			if (internalArray == null) throw new NullReferenceException();
 
+			int elementIndex = IndexOf(targetElement);
+			if (elementIndex == -1) return;
+
+			T[] tempArray = new T[Count - 1];
+			int originArrayIndex = 0;
+			for(int tempArrayIndex = 0; tempArrayIndex < tempArray.Length; tempArrayIndex++)
+			{
+				if (tempArrayIndex == elementIndex)
+				{
+					originArrayIndex++;
+				}
+				tempArray[tempArrayIndex] = internalArray[originArrayIndex];
+				originArrayIndex++;
+			}
+			CopyFullArray(tempArray);
 		}
 		public virtual void RemoveAtIndex(int targetIndex)
 		{
+			if (targetIndex < 0 || targetIndex > MaxIndex) throw new IndexOutOfRangeException();
+			if (internalArray == null) throw new NullReferenceException();
 
+			T[] tempArray = new T[Count - 1];
+			int originArrayIndex = 0;
+			for (int tempArrayIndex = 0; tempArrayIndex < tempArray.Length; tempArrayIndex++)
+			{
+				if (tempArrayIndex == targetIndex)
+				{
+					originArrayIndex++;
+				}
+				tempArray[tempArrayIndex] = internalArray[originArrayIndex];
+				originArrayIndex++;
+			}
+			CopyFullArray(tempArray);
 		}
 		public virtual void RemoveFirst()
 		{
-
+			RemoveAtIndex(0);
 		}
 		public virtual void RemoveEnd()
 		{
-
+			RemoveAtIndex(MaxIndex);
 		}
 
 		public IEnumerator<T> GetEnumerator()

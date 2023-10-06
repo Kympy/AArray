@@ -38,7 +38,23 @@ namespace AArray
 			testIntArray.AddRange(new List<int>() { 50, 51, 52 }, 6);
 			PrintArray(testIntArray);
 
-			
+			AddTitle("Find Element(50)'s Index");
+			Console.Write($"Element 50's index is {testIntArray.IndexOf(50)}");
+
+			AddTitle("Remove Element 50");
+			testIntArray.RemoveElement(50);
+			PrintArray(testIntArray);
+
+			AddTitle("Remove Element Index 0");
+			testIntArray.RemoveAtIndex(0);
+			PrintArray(testIntArray);
+
+			AddTitle("Add Unique Value 1 and 100. If value already exists, returned.");
+			testIntArray.AddUnique(1);
+			testIntArray.AddUnique(100);
+			PrintArray(testIntArray);
+
+			AddTitle("Finished");
 		}
 		private static void AddTitle(string title)
 		{
