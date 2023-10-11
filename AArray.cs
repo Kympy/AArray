@@ -24,7 +24,7 @@ namespace AmazingArray
 			get 
 			{
 				if (internalArray == null) throw new NullReferenceException();
-				if (internalArray.Length  - 1 < 0) return 0;
+				if (internalArray.Length - 1 < 0) return 0;
 				return internalArray.Length - 1; 
 			}
 		}
@@ -297,6 +297,42 @@ namespace AmazingArray
 		{
 			internalArray = null;
 			internalArray = Array.Empty<T>();
+		}
+		public virtual T PickRandom()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+
+			Random random = new Random();
+			int randomIndex = random.Next(0, Count);
+			return internalArray[randomIndex];
+		}
+		public virtual void ChangeElement(T element, int targetIndex)
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			internalArray[targetIndex] = element;
+		}
+		public virtual void PushRight()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+			
+			T lastElement = internalArray[MaxIndex];
+			for (int i = MaxIndex; i >= 1; i--)
+			{
+				internalArray[i] = internalArray[i - 1];
+			}
+			internalArray[0] = lastElement;
+		}
+		public virtual void PushLeft()
+		{
+			if (internalArray == null) throw new NullReferenceException();
+
+			T firstElement = internalArray[0];
+
+			for (int i = 0; i <= MaxIndex - 1; i++)
+			{
+				internalArray[i] = internalArray[i + 1];
+			}
+			internalArray[MaxIndex] = firstElement;
 		}
 		public IEnumerator<T> GetEnumerator()
 		{

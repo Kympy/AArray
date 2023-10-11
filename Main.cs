@@ -1,11 +1,5 @@
 ﻿using AmazingArray;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AArray
 {
@@ -31,7 +25,8 @@ namespace AArray
 		}
 		public static void Main()
 		{
-			//TestStructType();
+			TestStructType();
+			AddTitle("");
 			TestClassType();
 		}
 		private static void AddTitle(string title)
@@ -190,6 +185,22 @@ namespace AArray
 			currentAction = () =>
 			{
 				testArray.Reverse();
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testArray);
+
+			AddTitle("Push Right");
+			currentAction = () =>
+			{
+				testArray.PushRight();
+			};
+			RunAndCheckCollapsedTime(currentAction);
+			PrintArray(testArray);
+
+			AddTitle("Push Left");
+			currentAction = () =>
+			{
+				testArray.PushLeft();
 			};
 			RunAndCheckCollapsedTime(currentAction);
 			PrintArray(testArray);
