@@ -1,10 +1,10 @@
 
 # **Amazing Array**
 
-### 다양한 기능을 제공하는 커스텀 Array Class.
-### 값, 참조 형식 대응 가능
-### [] 키워드 접근 가능
-### IEnumerable 인터페이스 사용으로 foreach 사용 가능
++ ### 다양한 기능을 제공하는 커스텀 Array Class.
++ ### 값, 참조 형식 대응 가능
++ ### [] 키워드 접근 가능
++ ### IEnumerable 인터페이스 사용으로 foreach 사용 가능
 
 ---
 
