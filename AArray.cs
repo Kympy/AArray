@@ -91,6 +91,7 @@ namespace AmazingArray
 				to[i] = from[i];
 			}
 		}
+		// O(1) ~ O(n)
 		public virtual void Add(T item)
 		{
 			if (internalArray == null)
@@ -100,6 +101,7 @@ namespace AmazingArray
 			IncreaseSize(1);
 			internalArray[MaxIndex] = item;
 		}
+		// O(1) ~ O(n)
 		protected virtual void IncreaseSize(int amount)
 		{
 			if (internalArray == null)
@@ -112,6 +114,7 @@ namespace AmazingArray
 			CopyFullArray(internalArray, tempArray);
 			internalArray = tempArray;
 		}
+		// O(n)
 		/// <summary>
 		/// Add item to AArray where item is not contained in internal array.
 		/// </summary>
@@ -129,6 +132,7 @@ namespace AmazingArray
 			IncreaseSize(1);
 			internalArray[MaxIndex] = item;
         }
+		// O(n)
 		public bool Contains(T item)
 		{
 			if (internalArray == null) throw new NullReferenceException();
@@ -136,6 +140,7 @@ namespace AmazingArray
 
 			return Array.IndexOf<T>(internalArray, item) != -1;
         }
+		// O(n)
 		public int FindIndex(T item)
 		{
 			if (internalArray == null) throw new NullReferenceException();
@@ -143,12 +148,14 @@ namespace AmazingArray
 
 			return Array.IndexOf<T>(internalArray, item);
 		}
+		// O(n)
 		public T FindFirst(Func<T, bool> predicate)
 		{
 			if (internalArray == null) throw new NullReferenceException();
 
 			return internalArray.FirstOrDefault(predicate);
 		}
+		// O(n + a)
 		public T[] FindAll(Func<T, bool> predicate)
 		{
 			if (internalArray == null) throw new NullReferenceException();
@@ -159,6 +166,7 @@ namespace AmazingArray
 
 			return result.ToArray();
 		}
+		// O(n)
 		public virtual void InsertAtIndex(T item, int targetIndex)
 		{
 			if (internalArray == null) throw new NullReferenceException();
@@ -172,6 +180,7 @@ namespace AmazingArray
 			}
 			internalArray[targetIndex] = item;
 		}
+		// O(n)
 		public virtual void AddRange(T[] itemArray, int startIndex = -1)
 		{
 			if (itemArray == null || internalArray == null) throw new NullReferenceException();
